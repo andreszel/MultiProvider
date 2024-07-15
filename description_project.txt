@@ -1,0 +1,20 @@
+gymadmin.test
+- homepage - gym system
+- register customer
+
+gymcustomer.test
+- homepage - fitness club, gym
+- register client
+
+-- ALL USERS (admin, customer, client)
+/register
+/login
+
+-- ADMIN USERS
+/admin
+/admin/dashboard
+
+-- CUSTOMER USERS
+/customer
+/customer/dashboard
+
