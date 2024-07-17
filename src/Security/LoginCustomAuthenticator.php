@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,23 +32,36 @@ class LoginCustomAuthenticator extends AbstractLoginFormAuthenticator
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private EventDispatcherInterface $eventDispatcher,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private UserRepository $userRepository
     )
     {
     }
 
+    public function supports(Request $request): bool
+    {
+        return !empty($request->getPayload()->get('_username'));
+    }
+
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email', '');
+        /* $email = $request->request->get('_username', '');
+        $password = $request->request->get('_password', '');
+        $csrfToken = $request->request->get('_csrf_token', ''); */
+
+        $email = $request->getPayload()->get('_username', '');
+        $password = $request->getPayload()->get('_password', '');
+        $csrfToken = $request->getPayload()->get('_csrf_token', '');
+
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->request->get('password', '')),
+            new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
-                new RememberMeBadge(),
+                new CsrfTokenBadge('authenticate', $csrfToken),
+                (new RememberMeBadge())->enable(),
             ]
         );
     }
@@ -65,11 +79,9 @@ class LoginCustomAuthenticator extends AbstractLoginFormAuthenticator
     {
         $user = $token->getUser();
 
-        dd($user);
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-
 
         if($user->isAdmin()) {
             return new RedirectResponse($this->urlGenerator->generate(self::DASHBOARD_ADMIN_ROUTE));

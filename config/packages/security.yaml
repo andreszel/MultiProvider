@@ -10,16 +10,35 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        login:
+            pattern: ^/api/v1/login_check
+            stateless: true
+            json_login:
+                check_path: /api/v1/login_check
+                username_path: username
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern:   ^/api
+            stateless: true
+            entry_point: jwt
+            jwt: ~
+            refresh_jwt:
+                check_path: /api/v1/token/refresh # or, you may use the `api_refresh_token` route name
+                # or if you have more than one user provider
+                # provider: user_provider_name
+            access_denied_handler: App\Security\AccessDeniedHandler
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
             provider: app_user_provider
-            form_login:
-                login_path: app_login
-                check_path: app_login
-                enable_csrf: true
+            form_login: ~
+            custom_authenticators:
+                - App\Security\LoginCustomAuthenticator
+            entry_point: 'form_login'
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -30,17 +49,28 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+            remember_me:
+                secret:   '%kernel.secret%' # required
+                lifetime: 604800 # 1 week in seconds
+                # always_remember_me: true
+                # signature_properties: ['password', 'updatedAt']
 
             # configure the maximum login attempts
             login_throttling:
                 max_attempts: 3          # per minute ...
-                # interval: '15 minutes' # ... or in a custom period
+                interval: '10 minutes'
+    role_hierarchy:
+        ROLE_ADMIN:             [ROLE_USER, ROLE_ADMIN]
+        ROLE_CUSTOMER:          [ROLE_USER, ROLE_CUSTOMER]
+        ROLE_CLIENT:            [ROLE_USER, ROLE_CLIENT]
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/customer, roles: ROLE_CUSTOMER }
+        - { path: ^/api/v1/(login|welcome|token/refresh),   roles: PUBLIC_ACCESS }
+        - { path: ^/api,                                    roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin,                                  roles: ROLE_ADMIN }
+        - { path: ^/customer,                               roles: ROLE_CUSTOMER }
 
 when@test:
     security:
