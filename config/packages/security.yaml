@@ -33,6 +33,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            custom_authenticators:
+                - App\Security\LoginCustomAuthenticator
             lazy: true
             provider: app_user_provider
             form_login: ~
@@ -43,6 +45,14 @@ security:
                 path: app_logout
                 # where to redirect after logout
                 target: app_login
+            remember_me:
+                secret:   '%kernel.secret%' # required
+                lifetime: 604800 # 1 week in seconds
+                # by default, the feature is enabled by checking a
+                # checkbox in the login form (see below), uncomment the
+                # following line to always enable it.
+                #always_remember_me: true
+            #entry_point: 'form_login'
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
