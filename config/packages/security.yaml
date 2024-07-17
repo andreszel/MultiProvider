@@ -11,10 +11,10 @@ security:
                 property: email
     firewalls:
         login:
-            pattern: ^/api/v1/login_check
+            pattern: ^/api/auth
             stateless: true
             json_login:
-                check_path: /api/v1/login_check
+                check_path: /api/auth
                 username_path: username
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -25,7 +25,7 @@ security:
             entry_point: jwt
             jwt: ~
             refresh_jwt:
-                check_path: /api/v1/token/refresh # or, you may use the `api_refresh_token` route name
+                check_path: api_refresh_token # or, you may use the `api_refresh_token` route name
                 # or if you have more than one user provider
                 # provider: user_provider_name
             access_denied_handler: App\Security\AccessDeniedHandler
