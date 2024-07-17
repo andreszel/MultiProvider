@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,6 +69,13 @@ class LoginCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
+        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+
+        /* $request->getSession()->getFlashBag()->add(
+            'danger',
+            strtr($exception->getMessageKey(), $exception->getMessageData())
+        ); */
+
         return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
     }
 
