@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class LoginCustomAuthenticator extends AbstractLoginFormAuthenticator
+class LoginCustomAuthenticator extends AbstractAuthenticator
 {
     use TargetPathTrait;
 
@@ -34,6 +34,12 @@ class LoginCustomAuthenticator extends AbstractLoginFormAuthenticator
         private EntityManagerInterface $entityManager
     )
     {
+    }
+
+    public function supports(Request $request): bool
+    {
+        //return $request->headers->has('X-AUTH-TOKEN');
+        return !empty($request->request->get('email'));
     }
 
     public function authenticate(Request $request): Passport
