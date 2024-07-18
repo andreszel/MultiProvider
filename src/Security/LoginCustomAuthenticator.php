@@ -38,8 +38,12 @@ class LoginCustomAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): bool
     {
+        dump($request);
+        dump($request->request->get('username'));
+        dump(!empty($request->request->get('username')));
         //return $request->headers->has('X-AUTH-TOKEN');
-        return !empty($request->request->get('email'));
+        //return !empty($request->request->get('email'));
+        return $request->isMethod('POST') && $request->getPathInfo() === '/login';
     }
 
     public function authenticate(Request $request): Passport
