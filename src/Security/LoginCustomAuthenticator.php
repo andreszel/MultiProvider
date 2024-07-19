@@ -26,7 +26,7 @@ class LoginCustomAuthenticator extends AbstractLoginFormAuthenticator
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
-    public const DASHBOARD_ADMIN_ROUTE = 'app_admin_dashboard';
+    public const DASHBOARD_OWNER_ROUTE = 'app_owner_dashboard';
     public const DASHBOARD_CUSTOMER_ROUTE = 'app_customer_dashboard';
     public const DASHBOARD_CLIENT_ROUTE = 'app_client_dashboard';
 
@@ -91,8 +91,8 @@ class LoginCustomAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        if($user->isAdmin()) {
-            return new RedirectResponse($this->urlGenerator->generate(self::DASHBOARD_ADMIN_ROUTE));
+        if($user->isOwnerApp()) {
+            return new RedirectResponse($this->urlGenerator->generate(self::DASHBOARD_OWNER_ROUTE));
         }
         if($user->isCustomer()) {
             return new RedirectResponse($this->urlGenerator->generate(self::DASHBOARD_CUSTOMER_ROUTE));

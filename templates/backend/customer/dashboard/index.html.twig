@@ -1,0 +1,22 @@
+{% extends 'base_customer_auth.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4">Dashboard Customer!</h1>
+
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+    <p class="text-center">{{ date }}</p>
+
+    <div class="mb-3 text-center">
+        {% if app.user %}
+                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        {% else %}
+            You can login <a href="{{ path('app_login') }}">here</a>
+        {% endif %}
+    </div>
+
+{% endblock %}

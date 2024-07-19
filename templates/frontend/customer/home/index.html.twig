@@ -4,10 +4,15 @@
 
 {% block body %}
 
-    <h3 class="text-center">Homepage!</h3>
+    <h3 class="text-center">Homepage Customer!</h3>
+    <p class="text-center">{{ date }}</p>
     {% if app.user %}
         <div class="mb-3">
             You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% else %}
+        <div class="mb-3">
+            You can login <a href="{{ path('app_login') }}">here</a>
         </div>
     {% endif %}
 

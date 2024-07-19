@@ -60,7 +60,7 @@ security:
                 max_attempts: 3          # per minute ...
                 interval: '10 minutes'
     role_hierarchy:
-        ROLE_ADMIN:             [ROLE_USER, ROLE_ADMIN]
+        ROLE_ADMIN:             [ROLE_USER, ROLE_OWNER]
         ROLE_CUSTOMER:          [ROLE_USER, ROLE_CUSTOMER]
         ROLE_CLIENT:            [ROLE_USER, ROLE_CLIENT]
 
@@ -69,8 +69,9 @@ security:
     access_control:
         - { path: ^/api/v1/(login|welcome|token/refresh),   roles: PUBLIC_ACCESS }
         - { path: ^/api,                                    roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/admin,                                  roles: ROLE_ADMIN }
-        - { path: ^/customer,                               roles: ROLE_CUSTOMER }
+        - { path: ^/owner,                                  roles: ROLE_OWNER }
+        - { path: ^/cu,                                     roles: ROLE_CUSTOMER }
+        - { path: ^/cl,                                     roles: ROLE_CLIENT }
 
 when@test:
     security:

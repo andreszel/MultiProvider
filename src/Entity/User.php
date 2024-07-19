@@ -128,10 +128,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isAdmin(): bool
+    public function isOwnerApp(): bool
     {
         $roles = $this->getRoles();
-        return in_array("ROLE_ADMIN", $roles);
+        return in_array("ROLE_OWNER", $roles);
     }
 
     public function isCustomer(): bool

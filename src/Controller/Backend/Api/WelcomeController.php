@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller\Api;
+namespace App\Controller\Backend\Api;
 
+use App\Service\CurrentDate;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,15 +21,10 @@ class WelcomeController extends AbstractController
     #[Route('/security', name: 'security', methods: ['POST', 'GET'])]
     public function security(): JsonResponse
     {
+        $currentDate = new CurrentDate();
         return $this->json([
             'message' => 'security url!',
-            'date' => $this->getCuurentDateAsString()
+            'date' => $currentDate()
         ]);
-    }
-
-    private function getCuurentDateAsString()
-    {
-        $currentDate = new \DateTime('now', new \DateTimeZone('Europe/Warsaw'));
-        return $currentDate->format("Y-m-d H:i:s");
     }
 }

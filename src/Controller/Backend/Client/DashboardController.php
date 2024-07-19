@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Client;
+namespace App\Controller\Backend\Client;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -8,10 +8,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DashboardController extends AbstractController
 {
-    #[Route('/client/dashboard', name: 'app_client_dashboard')]
+    #[Route('/cl/dashboard', name: 'app_client_dashboard')]
     public function index(): Response
     {
-        return $this->render('client/dashboard/index.html.twig', [
+        return $this->render('backend/client/dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
         ]);
     }
